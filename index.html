@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anas Aghssain - Are You Cool Enough?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+
+    <!-- Start Page -->
+    <section id="start" class="card center-content">
+      <h1 class="name">Anas Aghssain</h1>
+      <button class="btn primary" onclick="startProcess()">Quiz: Are you cool enough to hire me?</button>
+    </section>
+
+    <!-- Loading Screen -->
+    <section id="loadingScreen" class="card center-content" style="display:none;">
+      <h2 id="loadingText">Verifying awesomeness...</h2>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="card" style="display:none;">
+      <div class="quiz-question" id="question1">
+        <h2>Can you handle epic levels of charisma?</h2>
+        <div class="btn-group">
+          <button class="btn yes" onclick="answerQuestion(1, 'yes')">Yes</button>
+          <button class="btn no" onclick="answerQuestion(1, 'no')">No</button>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="question2" style="display:none;">
+        <h2>Are you Team fish-Pastilla or chicken-Pastilla?</h2>
+        <div class="btn-group">
+          <button class="btn yes" onclick="answerQuestion(2, 'fish')">Fish</button>
+          <button class="btn no" onclick="answerQuestion(2, 'chicken')">Chicken</button>
+        </div>
+      </div>
+
+      <div class="quiz-question" id="question3" style="display:none;">
+        <h2>Do you want your company to be 73% cooler?</h2>
+        <div class="btn-group">
+          <button class="btn yes" onclick="answerQuestion(3, 'yes')">Yes</button>
+          <button class="btn no" onclick="answerQuestion(3, 'no')">No</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="card center-content" style="display:none;">
+      <h2 id="resultMessage"></h2>
+      <a id="contactButton" class="btn primary" href="mailto:aghsainanas2@gmail.com" target="_blank" rel="noopener" style="display:none;">
+        📧 Email Me
+      </a>
+      <button class="btn" onclick="restart()">Start Again</button>
+    </section>
+
+  </main>
+
+  <script>
+    function startProcess() {
+      document.getElementById('start').style.display = 'none';
+      document.getElementById('loadingScreen').style.display = 'flex';
+
+      const steps = [
+        "Verifying awesomeness...",
+        "Contacting Galactic HR...",
+        "System overload: Too much talent detected.",
+        "Thank you for your patience. Let's begin!"
+      ];
+
+      let i = 0;
+      const loadingText = document.getElementById('loadingText');
+
+      const interval = setInterval(() => {
+        if (i < steps.length) {
+          loadingText.innerText = steps[i];
+          i++;
+        } else {
+          clearInterval(interval);
+          document.getElementById('loadingScreen').style.display = 'none';
+          document.getElementById('quiz').style.display = 'block';
+          showQuestion(1);
+        }
+      }, 1500);
+    }
+
+    const answers = {};
+
+    function showQuestion(n) {
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`question${i}`).style.display = i === n ? 'block' : 'none';
+      }
+    }
+
+    function answerQuestion(qNum, value) {
+      answers[`q${qNum}`] = value;
+
+      if (qNum < 3) {
+        showQuestion(qNum + 1);
+      } else {
+        document.getElementById('quiz').style.display = 'none';
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const { q1, q2, q3 } = answers;
+      const resultSection = document.getElementById('result');
+      const contactBtn = document.getElementById('contactButton');
+      const resultMsg = document.getElementById('resultMessage');
+
+      resultSection.style.display = 'flex';
+
+      if (q1 === 'yes' && q3 === 'yes' && q2 === 'chicken') {
+        resultMsg.innerHTML = "🎉 Congratulations! You qualify to hire me!";
+        contactBtn.style.display = 'inline-block';
+      } else {
+        resultMsg.innerHTML = "😅 Tough luck. Try again when you're ready!";
+        contactBtn.style.display = 'none';
+      }
+    }
+
+    function restart() {
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('start').style.display = 'flex';
+      for (const key in answers) delete answers[key];
+    }
+  </script>
+</body>
+</html>
